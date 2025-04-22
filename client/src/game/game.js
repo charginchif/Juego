@@ -38,8 +38,16 @@ export default window.game;
 
 // Listen for keydown events to handle input
 window.addEventListener('keydown', function (e) {
-  // Prevent space and arrow keys from scrolling the page
-  if ([32, 37, 38, 39, 40].includes(e.keyCode)) {
+  // Only prevent space and arrow keys from scrolling when an input is not focused
+  const activeElement = document.activeElement;
+  const isInputFocused = activeElement && (
+    activeElement.tagName === 'INPUT' || 
+    activeElement.tagName === 'TEXTAREA' || 
+    activeElement.isContentEditable
+  );
+  
+  // Prevent default only if we're not in an input field
+  if ([32, 37, 38, 39, 40].includes(e.keyCode) && !isInputFocused) {
     e.preventDefault();
   }
 });

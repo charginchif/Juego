@@ -206,30 +206,40 @@ export class ChatScene extends Phaser.Scene {
     }
 
     update() {
+        // Check if any chat input has focus (to prevent player movement while typing)
+        const activeElement = document.activeElement;
+        const isInputFocused = activeElement && (
+            activeElement.tagName === 'INPUT' || 
+            activeElement.tagName === 'TEXTAREA'
+        );
+
         if (this.isChatOpen) {
-            // If chat is open, allow exiting with arrow keys
-            if (this.cursors.up.isDown || this.cursors.down.isDown || this.cursors.left.isDown || this.cursors.right.isDown) {
+            // If chat is open, allow exiting with arrow keys only if input is not focused
+            if (!isInputFocused && (this.cursors.up.isDown || this.cursors.down.isDown || 
+                this.cursors.left.isDown || this.cursors.right.isDown)) {
                 this.closeChat();
             }
             return;
         }
 
-        // Player movement
+        // Player movement - only if no chat input is focused
         const speed = 4;
         this.player.setVelocity(0);
 
-        if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-speed * 60);
-            this.player.setFlipX(true);
-        } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(speed * 60);
-            this.player.setFlipX(false);
-        }
-        
-        if (this.cursors.up.isDown) {
-            this.player.setVelocityY(-speed * 60);
-        } else if (this.cursors.down.isDown) {
-            this.player.setVelocityY(speed * 60);
+        if (!isInputFocused) {
+            if (this.cursors.left.isDown) {
+                this.player.setVelocityX(-speed * 60);
+                this.player.setFlipX(true);
+            } else if (this.cursors.right.isDown) {
+                this.player.setVelocityX(speed * 60);
+                this.player.setFlipX(false);
+            }
+            
+            if (this.cursors.up.isDown) {
+                this.player.setVelocityY(-speed * 60);
+            } else if (this.cursors.down.isDown) {
+                this.player.setVelocityY(speed * 60);
+            }
         }
 
         // Update name bar positions
