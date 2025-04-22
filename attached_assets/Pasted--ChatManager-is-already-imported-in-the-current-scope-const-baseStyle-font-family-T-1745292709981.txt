@@ -1,0 +1,468 @@
+// ChatManager is already imported in the current scope.
+
+const baseStyle = `
+    font-family: 'Trebuchet MS', serif;
+    font-size: 20px;
+    border: 2px solid #4e342e;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+`;
+
+const chatLogStyle = `
+    ${baseStyle}
+    width: 240px;
+    height: 570px;
+    background-color: rgba(0, 0, 0, 0.0);
+    padding: 10px;
+    direction: ltr;
+    box-shadow: none;
+    border: none;
+    overflow-y: auto;
+`;
+
+const inputStyle = `
+    ${baseStyle}
+    width: 270px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: none;
+`;
+
+const sendButtonStyle = `
+    ${baseStyle}
+    width: 270px;
+    height: 44px;
+    color: #e0d7c5;
+    background: linear-gradient(to bottom, #957d5f, #6c543e);
+    box-shadow: none;
+`;
+
+const closeButtonStyle = `
+    ${baseStyle}
+    width: 30px;
+    height: 30px;
+    border-radius: 30px; // makes the button circular
+    color: #fff; // white text color
+    background-color: #ff6347; // tomato red background
+    font-size: 30px; // larger font size for the 'X'
+    text-align: center; // centers the 'X' in the button
+    line-height: 30px; // vertically centers the 'X' in the button
+    cursor: pointer; // changes cursor to pointer on hover
+`;
+
+class TitleScene extends Phaser.Scene {
+    constructor() {
+        super({
+            key: 'TitleScene'
+        });
+    }
+    preload() {
+        this.load.image('background', 'https://play.rosebud.ai/assets/cyberpunk_stage.png?uwiS');
+        this.load.bitmapFont('roboto', 'https://play.rosebud.ai/assets/rosebud_roboto.png?NpJZ', 'https://play.rosebud.ai/assets/rosebud_roboto.xml?Xhre');
+    }
+    create() {
+        this.add.image(550, 445, 'background').setScale(0.5).setAlpha(0.5);
+        const title = this.add.bitmapText(700, 200, 'roboto', 'KOKORO KIARA', 80)
+            .setOrigin(0.5)
+            .setTint(0xff00ff);
+        // Username input
+        const usernameInput = this.add.dom(700, 400).createFromHTML(`
+            <input type="text" id="usernameInput" placeholder="Enter your username" style="${inputStyle}"/>`);
+        const startButton = this.add.dom(700, 500).createFromHTML(`
+            <button id="startButton" style="${sendButtonStyle}">Inicia la Aventura</button>`);
+        startButton.addListener('click');
+        startButton.on('click', () => {
+            const input = document.getElementById('usernameInput');
+            const username = input.value.trim();
+            if (username) {
+                window.gameUsername = username;
+                this.cameras.main.fade(1000, 0, 0, 0);
+                this.time.delayedCall(1000, () => {
+                    this.scene.start('CreatorsScene');
+                });
+            }
+        });
+    }
+}
+class CreatorsScene extends Phaser.Scene {
+    constructor() {
+        super({
+            key: 'CreatorsScene'
+        });
+    }
+    preload() {
+        this.load.image('background', 'https://play.rosebud.ai/assets/cyberpunk_stage.png?uwiS');
+        this.load.bitmapFont('roboto', 'https://play.rosebud.ai/assets/rosebud_roboto.png?NpJZ', 'https://play.rosebud.ai/assets/rosebud_roboto.xml?Xhre');
+    }
+    create() {
+        this.add.image(550, 445, 'background').setScale(0.5).setAlpha(0.3);
+        const title = this.add.bitmapText(700, 200, 'roboto', 'CREATORS', 64)
+            .setOrigin(0.5)
+            .setTint(0x00ffff);
+        // Example creator - Add more as needed
+        const creator = this.add.bitmapText(700, 300, 'roboto', '\nCreated by \nLuis Andre Gutierrez Zuñiga\nAlfredo Santos Gutierrez\nBryan Salazar\nAngel Yireh Garcia Jara', 32)
+            .setOrigin(0.5)
+            .setTint(0xff00ff);
+        const continueText = this.add.bitmapText(700, 500, 'roboto', 'Puchale play', 32)
+            .setOrigin(0.5)
+            .setTint(0x00ffff);
+        this.input.on('pointerdown', () => {
+            this.cameras.main.fade(1000, 0, 0, 0);
+            this.time.delayedCall(1000, () => {
+                this.scene.start('IntroScene');
+            });
+        });
+    }
+}
+class IntroScene extends Phaser.Scene {
+    constructor() {
+        super({
+            key: 'IntroScene'
+        });
+    }
+    preload() {
+        this.load.image('background', 'https://play.rosebud.ai/assets/cyberpunk_stage.png?uwiS');
+        this.load.bitmapFont('roboto', 'https://play.rosebud.ai/assets/rosebud_roboto.png?NpJZ', 'https://play.rosebud.ai/assets/rosebud_roboto.xml?Xhre');
+    }
+    create() {
+        // Add background
+        this.add.image(550, 445, 'background').setScale(0.5).setAlpha(0.5);
+        // Add title text
+        const title = this.add.bitmapText(700, 300, 'roboto', 'KOKORO KIARA', 64)
+            .setOrigin(0.5)
+            .setTint(0xff00ff);
+        // Add subtitle
+        const subtitle = this.add.bitmapText(700, 400, 'roboto', 'Puchale play', 32)
+            .setOrigin(0.5)
+            .setTint(0x00ffff);
+        // Fade in animation
+        this.tweens.add({
+            targets: [title, subtitle],
+            alpha: {
+                from: 0,
+                to: 1
+            },
+            duration: 2000,
+            ease: 'Power2'
+        });
+        // Add click handler to start game
+        this.input.on('pointerdown', () => {
+            this.cameras.main.fade(1000, 0, 0, 0);
+            this.time.delayedCall(1000, () => {
+                this.scene.start('ChatScene');
+            });
+        });
+    }
+}
+class ChatScene extends Phaser.Scene {
+    constructor() {
+        super({
+            key: 'ChatScene'
+        });
+    }
+    preload() {
+        this.load.image('background', 'https://play.rosebud.ai/assets/cyberpunk_stage.png?uwiS');
+        this.load.image('player', 'https://play.rosebud.ai/assets/character_02.png?gJTZ');
+        this.load.image('npc01', 'https://play.rosebud.ai/assets/character_03.png?licH');
+        this.load.image('npc02', 'https://play.rosebud.ai/assets/character_01.png?Ssl0');
+        this.load.image('npc03', 'https://play.rosebud.ai/assets/character_04.png?w4oc');
+        this.load.image('scroll', `https://play.rosebud.ai/assets/scroll_bg.png?UXx3`);
+        this.load.bitmapFont('roboto', 'https://play.rosebud.ai/assets/rosebud_roboto.png?NpJZ', 'https://play.rosebud.ai/assets/rosebud_roboto.xml?Xhre');
+        this.load.image('handIcon', 'https://play.rosebud.ai/assets/touch_indicator.png?AzVe');
+    }
+
+    create() {
+        this.add.image(550, 445, 'background').setScale(0.5);
+
+        this.add.image(1225, 445, 'scroll');
+
+        this.player = this.physics.add.image(360, 300, 'player');
+        this.addPlayerBreathingAnimation(this.player);
+        this.player.setScale(0.5);
+        this.player.setCollideWorldBounds(true);
+        this.player.body.setSize(this.player.width * 0.5, this.player.height * 0.5);
+
+        this.npc01 = new NPC(this, 600, 500, 'npc01', 'Eres un pícaro cyberpunk masculino de pelo negro y ojos verdes con ropa oscura. Tienes una espada de alta tecnología y un parche en el ojo derecho. Eres oscuro y melancólico pero una buena persona. Tu nombre es Zephyr Shadowblade. Responde siempre en español.', 'Sung Jin-woo');
+        this.addNPC01BreathingAnimation(this.npc01);
+        this.npc01.setScale(0.5);
+
+        this.npc02 = new NPC(this, 900, 400, 'npc02', 'Eres una mujer con coletas y pelo color turquesa brillante vestida con ropa deportiva. Eres engañosa y divertida. Tu nombre es Luna Trickshot. Responde siempre en español.', 'Hatsune Miku');
+        this.addNPC02BreathingAnimation(this.npc02);
+        this.npc02.setScale(0.5);
+
+        this.npc03 = new NPC(this, 200, 250, 'npc03', 'Eres un robot humanoide cuadrado con una gran cabeza de gato adorable. Tienes grandes puños de construcción y eres algo errático y sarcástico al hablar. Tu nombre es Circuit Whiskers. Responde siempre en español.', 'Circuito Bigotes');
+        this.addNPC03BreathingAnimation(this.npc03);
+        this.npc03.setScale(0.5);
+
+        this.physics.add.collider(this.player, [this.npc01, this.npc02, this.npc03]);
+
+        this.cursors = this.input.keyboard.createCursorKeys();
+        this.isChatOpen = false;
+        this.chatDialogs = new Map();
+
+        this.input.on('gameobjectdown', (pointer, gameObject) => {
+            if (gameObject instanceof NPC && this.playerInRange(gameObject)) {
+                this.openChat(gameObject);
+                if (this.handIcon) {
+                    this.handIcon.destroy();
+                    this.handIcon = null;
+                }
+            }
+        });
+
+        // Add hovering hand icon
+        const randomNPC = Phaser.Math.RND.pick([this.npc01, this.npc02, this.npc03]);
+        this.handIcon = this.add.image(randomNPC.x, randomNPC.y + 50, 'handIcon').setScale(0.20);
+        this.tweens.add({
+            targets: this.handIcon,
+            y: randomNPC.y + 30,
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+    }
+
+    addNameBar(character, name) {
+        const nameBar = this.add.graphics();
+        nameBar.fillStyle(0x000000, 0.7);
+        const nameWidth = Math.max(name.length * 12, 100); // Adjust base on name length
+        nameBar.fillRoundedRect(-nameWidth / 2, -125, nameWidth, 30, 15);
+        const nameText = this.add.bitmapText(0, -110, 'roboto', name, 20).setOrigin(0.5);
+
+        const container = this.add.container(character.x, character.y, [nameBar, nameText]);
+
+        character.on('destroy', () => {
+            container.destroy();
+        });
+
+        return container;
+    }
+
+    update() {
+        if (this.isChatOpen) {
+            if (this.cursors.up.isDown || this.cursors.down.isDown || this.cursors.left.isDown || this.cursors.right.isDown) {
+                this.closeChat();
+            }
+            return;
+        }
+
+        const speed = 4;
+        this.player.setVelocity(0);
+
+        if (this.cursors.left.isDown) {
+            this.player.setVelocityX(-speed * 60);
+            this.player.setFlipX(true);
+        } else if (this.cursors.right.isDown) {
+            this.player.setVelocityX(speed * 60);
+            this.player.setFlipX(false);
+        }
+        if (this.cursors.up.isDown) {
+            this.player.setVelocityY(-speed * 60);
+        } else if (this.cursors.down.isDown) {
+            this.player.setVelocityY(speed * 60);
+        }
+
+        // Update name bar positions
+        this.npc01.updateNameBarPosition();
+        this.npc02.updateNameBarPosition();
+        this.npc03.updateNameBarPosition();
+    }
+
+    addBreathingAnimation(sprite, duration, scale) {
+        this.tweens.add({
+            targets: sprite,
+            scaleX: sprite.scaleX * scale,
+            scaleY: sprite.scaleY * scale,
+            duration: duration,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+    }
+
+    addPlayerBreathingAnimation(sprite) {
+        this.addBreathingAnimation(sprite, 1000, 0.55);
+    }
+
+    addNPC01BreathingAnimation(sprite) {
+        this.addBreathingAnimation(sprite, 1100, 0.54);
+    }
+
+    addNPC02BreathingAnimation(sprite) {
+        this.addBreathingAnimation(sprite, 950, 0.56);
+    }
+
+    addNPC03BreathingAnimation(sprite) {
+        this.addBreathingAnimation(sprite, 1050, 0.53);
+    }
+
+    playerInRange(npc) {
+        const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, npc.x, npc.y);
+        return distance < 230;
+    }
+
+    openChat(npc) {
+        if (this.isChatOpen) return;
+        this.isChatOpen = true;
+
+        const uniqueIdSuffix = npc.characterDescription.replace(/\s+/g, '-').toLowerCase();
+
+        if (this.chatDialogs.has(npc)) {
+            const dialog = this.chatDialogs.get(npc);
+            dialog.chatLog.setVisible(true);
+            dialog.chatInput.setVisible(true);
+            dialog.sendButton.setVisible(true);
+            dialog.closeButton.setVisible(true);
+            dialog.chatInput.node.focus();
+        } else {
+            const chatLog = this.add.dom(1230, 400).createFromHTML(`
+                <div id="${npc.chatLogId}" style="${chatLogStyle}"></div>`);
+
+            const chatInputId = `chatInput-${uniqueIdSuffix}`;
+            const chatInput = this.add.dom(1220, 720).createFromHTML(`
+                <input type="text" id="${chatInputId}" style="${inputStyle}" />`);
+
+            const sendButtonId = `sendButton-${uniqueIdSuffix}`;
+            const sendButton = this.add.dom(1220, 770).createFromHTML(`
+                <button id="${sendButtonId}" style="${sendButtonStyle}">Enviar</button>`);
+
+            const closeButtonId = `closeButton-${uniqueIdSuffix}`;
+            const closeButton = this.add.dom(1350, 115).createFromHTML(`
+                <button id="${closeButtonId}" style="${closeButtonStyle}">X</button>`);
+
+            chatInput.node.addEventListener('keydown', (event) => {
+                event.stopPropagation();
+                if (event.key === "Enter" || event.keyCode === 13) {
+                    this.sendChatMessage(npc, npc.chatManager, chatInputId, npc.chatLogId);
+                }
+            });
+
+            sendButton.addListener('click').on('click', () => {
+                this.sendChatMessage(npc, npc.chatManager, chatInputId, npc.chatLogId);
+            });
+
+            closeButton.addListener('click').on('click', () => {
+                this.closeChat();
+            });
+
+            chatInput.node.focus();
+
+            this.chatDialogs.set(npc, {
+                chatLog,
+                chatInput,
+                sendButton,
+                closeButton
+            });
+        }
+    }
+
+    closeChat() {
+        if (!this.isChatOpen) return;
+        this.isChatOpen = false;
+
+        for (let dialog of this.chatDialogs.values()) {
+            dialog.chatLog.setVisible(false);
+            dialog.chatInput.setVisible(false);
+            dialog.sendButton.setVisible(false);
+            dialog.closeButton.setVisible(false);
+        }
+    }
+
+    updateChatLog(chatLogNode, role, message, characterName) {
+        const color = role === 'Player' ? '#3d1e01' : '#8a0094';
+        const displayName = role === 'Player' ? window.gameUsername || 'Player' : characterName;
+        chatLogNode.innerHTML += `<p style="color: ${color}; font-family: 'roboto', sans-serif;">${displayName}: ${message}</p>`;
+        chatLogNode.scrollTop = chatLogNode.scrollHeight;
+    }
+
+    async sendChatMessage(npc, chatManager, chatInputId, chatLogId) {
+        const chatInputNode = document.getElementById(chatInputId);
+        const chatLogNode = document.getElementById(chatLogId);
+
+        if (chatInputNode && chatLogNode) {
+            const inputValue = chatInputNode.value;
+            if (inputValue) {
+                const username = window.gameUsername || 'Player';
+                chatManager.addMessage('user', inputValue, username);
+                this.updateChatLog(document.getElementById(npc.chatLogId), 'Player', inputValue, username);
+
+                const response = await chatManager.getCharacterResponse();
+                chatManager.addMessage('assistant', response);
+                this.updateChatLog(document.getElementById(npc.chatLogId), 'Character', response, npc.name);
+
+                chatInputNode.value = '';
+            }
+        }
+    }
+}
+
+class NPC extends Phaser.Physics.Arcade.Image {
+    constructor(scene, x, y, key, characterDescription, name) {
+        super(scene, x, y, key);
+
+        this.scene = scene;
+        this.characterDescription = characterDescription;
+        this.chatLogId = 'chatLogContent-' + characterDescription.replace(/\s+/g, '-').toLowerCase();
+        this.name = name;
+
+        this.setInteractive();
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+
+        this.setImmovable(true);
+        this.body.setSize(this.width * 0.5, this.height * 0.5);
+
+        // Update character description to include username awareness
+        const enhancedDescription = `${characterDescription} Recuerda el nombre del usuario con el que interactúas y úsalo en la conversación. El usuario actual es ${window.gameUsername || 'Player'}. Mantén un registro de las interacciones previas con este usuario.`;
+        this.chatManager = new ChatManager(enhancedDescription);
+
+        this.scene.addBreathingAnimation(this);
+        this.nameBar = this.scene.addNameBar(this, name);
+    }
+
+    setCursorStyle() {
+        this.on('pointerover', () => {
+            if (this.scene.playerInRange(this)) {
+                this.scene.input.setDefaultCursor('pointer');
+            }
+        });
+
+        this.on('pointerout', () => {
+            this.scene.input.setDefaultCursor('default');
+        });
+    }
+
+    updateNameBarPosition() {
+        if (this.nameBar) {
+            this.nameBar.setPosition(this.x, this.y);
+        }
+    }
+}
+
+const config = {
+    parent: 'renderDiv',
+    type: Phaser.AUTO,
+    scene: [TitleScene, CreatorsScene, IntroScene, ChatScene],
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 1400,
+        height: 890,
+    },
+    dom: {
+        createContainer: true
+    },
+    input: {
+        keyboard: {
+            capture: [37, 38, 39, 40]
+        }
+    },
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false
+        }
+    }
+};
+
+window.phaserGame = new Phaser.Game(config);
