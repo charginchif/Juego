@@ -21,24 +21,39 @@ class ChatManager {
   }
 
   async sendMessage(message, username) {
-    if (!this.currentNPC) return;
-    
-    // Add user message to conversation
-    const userMessage = { 
-      sender: username || 'Player', 
-      text: message, 
-      timestamp: new Date().toISOString() 
-    };
-    
-    const conversation = this.conversations.get(this.currentNPC.name);
-    conversation.push(userMessage);
-    
-    if (this.onMessageCallback) {
-      this.onMessageCallback(userMessage);
+    if (!this.currentNPC) {
+      console.error('No current NPC in conversation');
+      return {
+        sender: 'System',
+        text: 'Error: No character selected for conversation.',
+        timestamp: new Date().toISOString()
+      };
     }
     
-    // Generate NPC response based on its character
     try {
+      // Add user message to conversation
+      const userMessage = { 
+        sender: username || 'Player', 
+        text: message, 
+        timestamp: new Date().toISOString() 
+      };
+      
+      const conversation = this.conversations.get(this.currentNPC.name);
+      if (!conversation) {
+        console.error('No conversation found for NPC:', this.currentNPC.name);
+        return {
+          sender: 'System',
+          text: 'Error: Conversation not found.',
+          timestamp: new Date().toISOString()
+        };
+      }
+      
+      conversation.push(userMessage);
+      
+      if (this.onMessageCallback) {
+        this.onMessageCallback(userMessage);
+      }
+      
       // In a real implementation, this would call an API
       // For now, we'll simulate a response
       
@@ -67,7 +82,12 @@ class ChatManager {
         timestamp: new Date().toISOString() 
       };
       
-      conversation.push(errorMessage);
+      if (this.currentNPC) {
+        const conversation = this.conversations.get(this.currentNPC.name);
+        if (conversation) {
+          conversation.push(errorMessage);
+        }
+      }
       
       if (this.onMessageCallback) {
         this.onMessageCallback(errorMessage);

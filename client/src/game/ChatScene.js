@@ -382,7 +382,24 @@ export class ChatScene extends Phaser.Scene {
             // Generate NPC response
             ChatManager.sendMessage(message, window.gameUsername)
                 .then(npcResponse => {
-                    this.appendMessageToChat(npc.chatLogId, npcResponse);
+                    if (npcResponse) {
+                        this.appendMessageToChat(npc.chatLogId, npcResponse);
+                    } else {
+                        // Handle the case where there's no response
+                        this.appendMessageToChat(npc.chatLogId, {
+                            sender: 'System',
+                            text: 'No response received from character.',
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error in chat response:', error);
+                    this.appendMessageToChat(npc.chatLogId, {
+                        sender: 'System',
+                        text: 'Error communicating with the character. Please try again.',
+                        timestamp: new Date().toISOString()
+                    });
                 });
         }
     }
@@ -398,6 +415,12 @@ export class ChatScene extends Phaser.Scene {
         const senderElement = document.createElement('div');
         senderElement.style.fontWeight = 'bold';
         
+        // Check if message is properly formed
+        if (!message || typeof message !== 'object') {
+            console.error('Invalid message object:', message);
+            return;
+        }
+        
         if (message.sender === window.gameUsername || message.sender === 'Player') {
             senderElement.style.color = '#4CAF50';
         } else if (message.sender === 'System') {
@@ -406,12 +429,12 @@ export class ChatScene extends Phaser.Scene {
             senderElement.style.color = '#2196F3';
         }
         
-        senderElement.textContent = message.sender;
+        senderElement.textContent = message.sender || 'Unknown';
         
         const textElement = document.createElement('div');
         textElement.style.color = '#FFFFFF';
         textElement.style.overflowWrap = 'break-word';
-        textElement.textContent = message.text;
+        textElement.textContent = message.text || 'No message content';
         
         messageElement.appendChild(senderElement);
         messageElement.appendChild(textElement);
