@@ -19,6 +19,10 @@ const chatLogStyle = `
     box-shadow: none;
     border: none;
     overflow-y: auto;
+    max-width: 90%;
+    max-height: 60vh;
+    position: relative;
+    box-sizing: border-box;
 `;
 
 const inputStyle = `
@@ -27,6 +31,8 @@ const inputStyle = `
     height: 40px;
     background-color: rgba(255, 255, 255, 0.4);
     box-shadow: none;
+    max-width: 90%;
+    box-sizing: border-box;
 `;
 
 const sendButtonStyle = `
@@ -115,20 +121,33 @@ export class ChatScene extends Phaser.Scene {
         // Set up physics collisions
         this.physics.add.collider(this.player, [this.npc01, this.npc02, this.npc03]);
         
-        // Set up keyboard input
-        // Configuración de los controles de teclado
+        // REGISTRO Y CONFIGURACIÓN DE CONTROLES DE TECLADO
+        // Configuración más explícita para los controles
         this.cursors = this.input.keyboard.createCursorKeys();
         
-        // Añadir manejo manual de teclas alternativas (WASD)
+        // Añadir manejo manual de teclas WASD con un enfoque más directo
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         
+        // Configuración específica para evitar comportamiento predeterminado del navegador
+        this.input.keyboard.addCapture([
+            Phaser.Input.Keyboard.KeyCodes.UP,
+            Phaser.Input.Keyboard.KeyCodes.DOWN,
+            Phaser.Input.Keyboard.KeyCodes.LEFT,
+            Phaser.Input.Keyboard.KeyCodes.RIGHT,
+            Phaser.Input.Keyboard.KeyCodes.W,
+            Phaser.Input.Keyboard.KeyCodes.A,
+            Phaser.Input.Keyboard.KeyCodes.S,
+            Phaser.Input.Keyboard.KeyCodes.D
+        ]);
+        
         // Registro para diagnóstico
-        console.log("Controles de teclado inicializados:", {
+        console.log("Controles de teclado inicializados con captura:", {
             cursors: this.cursors, 
-            wasd: { w: this.keyW, a: this.keyA, s: this.keyS, d: this.keyD }
+            wasd: { w: this.keyW, a: this.keyA, s: this.keyS, d: this.keyD },
+            captured: "Flechas + WASD"
         });
         
         // Initialize chat system
@@ -225,55 +244,59 @@ export class ChatScene extends Phaser.Scene {
     }
 
     update() {
-        // Si el chat está abierto, permitir cerrar con teclas y no mover al jugador
+        // SOLUCIÓN EXTREMA: Sistema de movimiento con posición directa
+        // Comprobando si el chat está abierto
         if (this.isChatOpen) {
+            // Permitir cerrar el chat con teclas
             if (this.cursors.up.isDown || this.cursors.down.isDown || 
-                this.cursors.left.isDown || this.cursors.right.isDown) {
+                this.cursors.left.isDown || this.cursors.right.isDown ||
+                this.keyW.isDown || this.keyA.isDown || this.keyS.isDown || this.keyD.isDown) {
                 this.closeChat();
+                console.log('Chat cerrado mediante teclas');
             }
             return;
         }
 
-        // MANEJO DE MOVIMIENTO DIRECTO - Es más fiable que usar velocidades
-        const speed = 4; // Velocidad más directa en píxeles por frame
+        // Variables para detectar movimiento
+        let movX = 0;
+        let movY = 0;
+        const velocidad = 5; // Velocidad aumentada
         
-        // Verificamos las teclas de dirección y WASD
-        const leftPressed = this.cursors.left.isDown || this.keyA.isDown;
-        const rightPressed = this.cursors.right.isDown || this.keyD.isDown;
-        const upPressed = this.cursors.up.isDown || this.keyW.isDown;
-        const downPressed = this.cursors.down.isDown || this.keyS.isDown;
-        
-        // Movimiento horizontal
-        if (leftPressed) {
-            this.player.x -= speed;
-            this.player.setFlipX(true);
-        } else if (rightPressed) {
-            this.player.x += speed;
-            this.player.setFlipX(false);
+        // Comprobar las teclas de dirección y WASD
+        if (this.cursors.left.isDown || this.keyA.isDown) {
+            movX = -velocidad;
+            console.log('Moviendo a la izquierda');
+        } 
+        else if (this.cursors.right.isDown || this.keyD.isDown) {
+            movX = velocidad;
+            console.log('Moviendo a la derecha');
         }
         
-        // Movimiento vertical
-        if (upPressed) {
-            this.player.y -= speed;
-        } else if (downPressed) {
-            this.player.y += speed;
+        if (this.cursors.up.isDown || this.keyW.isDown) {
+            movY = -velocidad;
+            console.log('Moviendo arriba');
+        } 
+        else if (this.cursors.down.isDown || this.keyS.isDown) {
+            movY = velocidad;
+            console.log('Moviendo abajo');
         }
         
-        // Solo para diagnóstico
-        if (leftPressed || rightPressed || upPressed || downPressed) {
-            console.log('Movimiento:', {
-                left: leftPressed,
-                right: rightPressed,
-                up: upPressed,
-                down: downPressed,
-                playerX: this.player.x,
-                playerY: this.player.y
-            });
+        // Aplicar movimiento directo
+        if (movX !== 0 || movY !== 0) {
+            // Movemos directamente la posición
+            this.player.x += movX;
+            this.player.y += movY;
+            
+            // Manejar la dirección del sprite
+            if (movX < 0) this.player.setFlipX(true);
+            if (movX > 0) this.player.setFlipX(false);
+            
+            // Mantener dentro de los límites de la pantalla
+            this.player.x = Phaser.Math.Clamp(this.player.x, 50, this.sys.game.config.width - 50);
+            this.player.y = Phaser.Math.Clamp(this.player.y, 50, this.sys.game.config.height - 50);
+            
+            console.log('Nueva posición:', this.player.x, this.player.y);
         }
-
-        // Mantener al jugador dentro de los límites del mundo
-        this.player.x = Phaser.Math.Clamp(this.player.x, 0, this.sys.game.config.width);
-        this.player.y = Phaser.Math.Clamp(this.player.y, 0, this.sys.game.config.height);
 
         // Actualizar posición de los nombres de NPC
         this.npc01.updateNameBarPosition();

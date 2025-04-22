@@ -42,9 +42,10 @@ window.addEventListener('load', () => {
 // Export the game instance for access in other modules
 export default window.game;
 
-// Manejar eventos de teclado de forma más directa
+// SOLUCIONANDO PROBLEMAS DE TECLADO
+// Solo prevenir el comportamiento por defecto de las teclas de flecha, pero permitir espacio
 document.addEventListener('keydown', function(e) {
-  // Prevenir comportamiento por defecto de las teclas de movimiento solo si no estamos en un campo de texto
+  // Comprobar si estamos en un campo de texto
   const activeElement = document.activeElement;
   const isInputFocused = activeElement && (
     activeElement.tagName === 'INPUT' || 
@@ -52,13 +53,22 @@ document.addEventListener('keydown', function(e) {
     activeElement.isContentEditable
   );
   
-  // Teclas de dirección y espacio
-  const movementKeys = [32, 37, 38, 39, 40]; // Space, Left, Up, Right, Down
+  // Teclas de dirección (NO incluimos espacio aquí para que funcione en chat)
+  const arrowKeys = [37, 38, 39, 40]; // Left, Up, Right, Down
   
-  if (movementKeys.includes(e.keyCode) && !isInputFocused) {
+  // Prevenir el comportamiento predeterminado solo para las teclas de flecha cuando no estamos en un campo de texto
+  if (arrowKeys.includes(e.keyCode) && !isInputFocused) {
     e.preventDefault();
-    
-    // Imprimir información de diagnóstico
-    console.log('Tecla presionada:', e.key, 'código:', e.keyCode);
+    console.log('Flecha presionada:', e.key);
+  }
+  
+  // Si es espacio (32), solo prevenimos el comportamiento por defecto si NO estamos en un input
+  // Esto permite usar espacios en campos de texto pero evita el scroll
+  if (e.keyCode === 32 && !isInputFocused) {
+    e.preventDefault();
+    console.log('Espacio presionado, no en input');
+  } else if (e.keyCode === 32 && isInputFocused) {
+    // No prevenimos nada, dejamos que el espacio funcione normalmente en los inputs
+    console.log('Espacio en input, permitido');
   }
 });
