@@ -74,12 +74,18 @@ export class ChatScene extends Phaser.Scene {
         this.add.image(550, 445, 'background').setScale(0.5);
         this.add.image(1225, 445, 'scroll');
         
-        // Add player character
+        // Add player character con físicas más simples
         this.player = this.physics.add.image(360, 300, 'player');
         this.addPlayerBreathingAnimation(this.player);
         this.player.setScale(0.5);
         this.player.setCollideWorldBounds(true);
+        
+        // Ajustamos el tamaño del cuerpo físico para evitar problemas
         this.player.body.setSize(this.player.width * 0.5, this.player.height * 0.5);
+        
+        // Configurar las físicas del jugador
+        this.player.setDamping(true);
+        this.player.setDrag(0.95);
         
         // Add NPCs
         this.npc01 = new NPC(
@@ -110,7 +116,20 @@ export class ChatScene extends Phaser.Scene {
         this.physics.add.collider(this.player, [this.npc01, this.npc02, this.npc03]);
         
         // Set up keyboard input
+        // Configuración de los controles de teclado
         this.cursors = this.input.keyboard.createCursorKeys();
+        
+        // Añadir manejo manual de teclas alternativas (WASD)
+        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        
+        // Registro para diagnóstico
+        console.log("Controles de teclado inicializados:", {
+            cursors: this.cursors, 
+            wasd: { w: this.keyW, a: this.keyA, s: this.keyS, d: this.keyD }
+        });
         
         // Initialize chat system
         this.isChatOpen = false;
@@ -206,43 +225,57 @@ export class ChatScene extends Phaser.Scene {
     }
 
     update() {
-        // Check if any chat input has focus (to prevent player movement while typing)
-        const activeElement = document.activeElement;
-        const isInputFocused = activeElement && (
-            activeElement.tagName === 'INPUT' || 
-            activeElement.tagName === 'TEXTAREA'
-        );
-
+        // Si el chat está abierto, permitir cerrar con teclas y no mover al jugador
         if (this.isChatOpen) {
-            // If chat is open, allow exiting with arrow keys only if input is not focused
-            if (!isInputFocused && (this.cursors.up.isDown || this.cursors.down.isDown || 
-                this.cursors.left.isDown || this.cursors.right.isDown)) {
+            if (this.cursors.up.isDown || this.cursors.down.isDown || 
+                this.cursors.left.isDown || this.cursors.right.isDown) {
                 this.closeChat();
             }
             return;
         }
 
-        // Player movement - only if no chat input is focused
-        const speed = 4;
-        this.player.setVelocity(0);
-
-        if (!isInputFocused) {
-            if (this.cursors.left.isDown) {
-                this.player.setVelocityX(-speed * 60);
-                this.player.setFlipX(true);
-            } else if (this.cursors.right.isDown) {
-                this.player.setVelocityX(speed * 60);
-                this.player.setFlipX(false);
-            }
-            
-            if (this.cursors.up.isDown) {
-                this.player.setVelocityY(-speed * 60);
-            } else if (this.cursors.down.isDown) {
-                this.player.setVelocityY(speed * 60);
-            }
+        // MANEJO DE MOVIMIENTO DIRECTO - Es más fiable que usar velocidades
+        const speed = 4; // Velocidad más directa en píxeles por frame
+        
+        // Verificamos las teclas de dirección y WASD
+        const leftPressed = this.cursors.left.isDown || this.keyA.isDown;
+        const rightPressed = this.cursors.right.isDown || this.keyD.isDown;
+        const upPressed = this.cursors.up.isDown || this.keyW.isDown;
+        const downPressed = this.cursors.down.isDown || this.keyS.isDown;
+        
+        // Movimiento horizontal
+        if (leftPressed) {
+            this.player.x -= speed;
+            this.player.setFlipX(true);
+        } else if (rightPressed) {
+            this.player.x += speed;
+            this.player.setFlipX(false);
+        }
+        
+        // Movimiento vertical
+        if (upPressed) {
+            this.player.y -= speed;
+        } else if (downPressed) {
+            this.player.y += speed;
+        }
+        
+        // Solo para diagnóstico
+        if (leftPressed || rightPressed || upPressed || downPressed) {
+            console.log('Movimiento:', {
+                left: leftPressed,
+                right: rightPressed,
+                up: upPressed,
+                down: downPressed,
+                playerX: this.player.x,
+                playerY: this.player.y
+            });
         }
 
-        // Update name bar positions
+        // Mantener al jugador dentro de los límites del mundo
+        this.player.x = Phaser.Math.Clamp(this.player.x, 0, this.sys.game.config.width);
+        this.player.y = Phaser.Math.Clamp(this.player.y, 0, this.sys.game.config.height);
+
+        // Actualizar posición de los nombres de NPC
         this.npc01.updateNameBarPosition();
         this.npc02.updateNameBarPosition();
         this.npc03.updateNameBarPosition();
