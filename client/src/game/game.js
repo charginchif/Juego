@@ -16,8 +16,9 @@ const config = {
     default: 'arcade',
     arcade: {
       gravity: { y: 0 },
-      debug: true,  // Activamos el debug para ver los cuerpos físicos
-      fps: 60       // Aseguramos 60fps para mejor rendimiento
+      debug: true,  // Mostramos los cuerpos físicos para mejor debug
+      fps: 60,      // Aseguramos 60fps para mejor rendimiento
+      tileBias: 32  // Mejor detección de colisiones
     }
   },
   dom: {
@@ -28,9 +29,17 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
   input: {
-    keyboard: true,  // Aseguramos que el teclado está habilitado
-    mouse: true,     // Aseguramos que el ratón está habilitado
-    activePointers: 1 // Número de punteros activos
+    keyboard: {
+      capture: [
+        // NO capturamos WASD para permitir su uso en el chat
+        Phaser.Input.Keyboard.KeyCodes.UP,
+        Phaser.Input.Keyboard.KeyCodes.DOWN,
+        Phaser.Input.Keyboard.KeyCodes.LEFT,
+        Phaser.Input.Keyboard.KeyCodes.RIGHT
+      ]
+    },
+    mouse: true,
+    activePointers: 1
   }
 };
 
