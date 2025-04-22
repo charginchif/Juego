@@ -1,0 +1,281 @@
+Fase 1: Planificación y diseño inicial (Concepto y prototipos)
+Objetivo: En esta fase, el equipo debe definir la visión general del juego, los conceptos básicos, la historia, los personajes principales, los escenarios y los desafíos. También deben crear un prototipo simple para validar las ideas iniciales.
+Entregables:
+Documento de diseño inicial:
+
+
+Resumen del juego (Género, historia, jugabilidad, etc.).
+
+
+Descripción de personajes principales y enemigos.
+
+
+Diseño básico de niveles/escenarios.
+
+
+Esquemas iniciales de las misiones y objetivos del juego.
+
+
+Definición del sistema de puntaje y recompensas.
+
+
+Prototipo funcional simple (Un nivel o escenario que muestre la interacción básica):
+
+
+Un mapa sencillo.
+
+
+Un personaje que se mueve y hace alguna acción básica (ej. saltar, disparar, etc.).
+
+
+Introducción de los enemigos (pocos, con comportamientos básicos).
+
+
+Sistema de puntaje o retroalimentación visual mínima.
+
+
+Rúbrica de Evaluación:
+Claridad en la visión del juego (10 puntos)
+
+
+La descripción del juego es clara y coherente.
+
+
+Diseño de personajes y enemigos (10 puntos)
+
+
+Los personajes y enemigos están bien definidos en términos de diseño y mecánicas.
+
+
+Prototipo funcional (10 puntos)
+
+
+Se entregó un prototipo jugable básico (aunque sea con funcionalidades mínimas).
+
+
+Creatividad (5 puntos)
+
+
+Se demuestran ideas creativas e innovadoras en la historia, personajes y mecánicas.
+
+
+Documentación (5 puntos)
+
+
+El diseño del juego está bien documentado y justificado.
+
+
+Feedback:
+Ajustes en la jugabilidad o mecánicas de personajes y enemigos.
+
+
+Recomendaciones para la implementación de sistemas adicionales (p. ej., misiones, más enemigos).
+
+
+Fase 2: Desarrollo del juego (Avance de las mecánicas, niveles y personajes)
+Objetivo: En esta fase, se debe expandir el juego y empezar a implementar niveles completos, sistemas de misiones, enemigos y avances en la jugabilidad. El sistema de puntuación y recompensas debe estar en su lugar, y debe haber avances en la parte gráfica.
+Entregables:
+Desarrollo del juego:
+
+
+Al menos tres niveles o escenarios completos con diferentes desafíos.
+
+
+Personajes con habilidades específicas (ej. ataques, movimientos).
+
+
+Sistema de misiones con objetivos claros (ej. eliminar enemigos, recoger objetos, completar niveles).
+
+
+Sistema de puntaje completo con recompensas (ej. bonificaciones por tiempo, puntos por derrotar enemigos).
+
+
+
+
+
+Mejoras visuales:
+
+
+Gráficos mejorados de personajes y enemigos.
+
+
+Elementos visuales como fondos, objetos interactivos, efectos de sonido y música.
+
+
+Documentación técnica:
+
+
+Especificación de la estructura de los niveles y mecánicas de juego.
+
+
+Descripción de cómo se implementaron los sistemas (puntuación, enemigos, misiones).
+
+
+Rúbrica de Evaluación:
+Avances en la jugabilidad (15 puntos)
+
+
+Los niveles están completos y tienen objetivos y desafíos claros.
+
+
+Interactividad del jugador (10 puntos)
+
+
+Las interacciones del jugador con el entorno, enemigos y misiones son satisfactorias.
+
+
+Mejoras visuales y sonidos (10 puntos)
+
+
+Se han integrado recursos visuales y sonoros adecuados (gráficos, música, efectos).
+
+
+Sistema de puntaje y misiones (10 puntos)
+
+
+El sistema de puntuación y las misiones están implementadas de manera funcional y coherente.
+
+
+Documentación técnica (5 puntos)
+
+
+La documentación detalla de manera comprensible cómo se implementan las funcionalidades.
+
+
+Feedback:
+Recomendaciones para mejorar la dificultad de los niveles.
+
+
+Ajustes en las misiones o en la interactividad de los personajes.
+
+
+
+
+Fase 3: Versión final y pruebas (Pulido y optimización)
+Objetivo: En esta fase, el juego debe estar completo, optimizado y libre de errores. Deben realizarse pruebas de jugabilidad, y se deben hacer ajustes para asegurar una experiencia fluida. Además, se debe agregar cualquier característica adicional que haga al juego más atractivo o completo.
+Entregables:
+Juego completo:
+
+
+Todos los niveles completos, personajes interactivos y enemigos con IA.
+
+
+Sistema de misiones finalizado, con recompensas y metas claras.
+
+
+Integración de todos los elementos gráficos y sonoros.
+
+
+Juego optimizado y sin errores graves.
+
+
+Pruebas de jugabilidad:
+
+
+Resultados de pruebas de usabilidad y corrección de errores.
+
+
+Ajustes en la dificultad o en la mecánica del juego.
+
+
+Documentación final:
+
+
+Descripción final del juego, incluyendo historia, personajes, misiones, mecánicas y diseño de niveles.
+
+
+Análisis de la implementación técnica y los recursos utilizados.
+
+
+Rúbrica de Evaluación:
+Complejidad y calidad del juego (20 puntos)
+
+
+El juego está completamente funcional, con todos los niveles, personajes y enemigos interactivos.
+
+
+Optimización y pulido (15 puntos)
+
+
+El juego está libre de errores graves y corre sin problemas.
+
+
+Innovación y creatividad (10 puntos)
+
+
+El juego presenta ideas innovadoras y atractivas en cuanto a jugabilidad, diseño y mecánicas.
+
+
+Pruebas de jugabilidad (5 puntos)
+
+
+El juego ha sido probado y ajustado en cuanto a dificultad, interactividad y flujo de jugabilidad.
+
+
+Documentación final (5 puntos)
+
+
+La documentación está bien organizada y presenta todos los aspectos del juego claramente.
+
+
+Feedback:
+Evaluación final del juego, recomendaciones para una posible mejora o expansión futura.
+
+
+
+Documentación del Proyecto
+Introducción:
+
+
+Resumen del proyecto.
+
+
+Propósito del juego y objetivos.
+
+
+Herramientas y tecnologías utilizadas (Cocos2d, Unity, etc.).
+
+
+Diseño del Juego:
+
+
+Historia y narrativa.
+
+
+Descripción de personajes, enemigos y NPCs.
+
+
+Mapas, niveles y misiones.
+
+
+Sistema de puntuación, recompensas y logros.
+
+
+Implementación Técnica:
+
+
+Descripción detallada de los sistemas implementados (jugabilidad, físicas, IA de enemigos, etc.).
+
+
+Código base y fragmentos importantes de implementación (si se trata de un proyecto en Python, JavaScript o Cocos2d).
+
+
+Estructura de carpetas y organización del código.
+
+
+Pruebas:
+
+
+Descripción de las pruebas realizadas.
+
+
+Resultados obtenidos y cómo se solucionaron los problemas.
+
+
+Conclusiones:
+
+
+Lecciones aprendidas durante el desarrollo.
+
+
+Áreas de mejora y posibles expansiones.
